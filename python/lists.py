@@ -1,4 +1,5 @@
 import numpy as np
+from constants import elemPerBar
 
 eL = np.array([[1, 2],  # elemList with initial geometry of 1 elem per bar
                [2, 3],
@@ -134,8 +135,6 @@ def create_locel(dofList, elemList=eL):
 # 2) create dofList with create_dofList
 # 3) create locel with create_locel
 
-
-elemPerBar = 3
 elemList, nodeList = create_elemList_and_nodeList(elemPerBar)
 dofList = create_dofList(nodeList)
 locel = create_locel(dofList, elemList)
