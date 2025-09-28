@@ -72,18 +72,67 @@ nL = np.array([[0, 4, 1],   # nodeList with initial geometry of 1 elem per bar
               [10.5, 0, 0],
               [13.5, 0, 0]])
 
+etL = np.array([1,  # 1 = frame horizontal, 2 = frame diagonal, 3 = support diagonal, 4 = support transverse
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,  # elem10
+                2,
+                2,
+                2,
+                2,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,  # elem20
+                1,
+                1,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,  # elem30
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                4,
+                4,  # elem 40
+                4,
+                4,
+                4,
+                4,
+                4,
+                4,
+                4])
+
 
 def interpolation(node1, node2, alpha):
     return (1 - alpha) * node1 + alpha * node2
 
 
-def create_elemList_and_nodeList(elemPerBar, elemList=eL, nodeList=nL):
+def create_elemList_and_nodeList_and_elemTypeList(elemPerBar, elemList=eL, nodeList=nL, elemTypeList=etL):
     if elemPerBar == 1:
-        return elemList, nodeList
+        return elemList, nodeList, elemTypeList
     else:
         elemL = np.zeros(
             (elemPerBar*np.shape(elemList)[0], 2), dtype=int)
         nodeL = nodeList.tolist()
+        elemTypeL = []
         arrayPositionIndex = 0
         nodeCounter = elemList.max() + 1
 
@@ -92,6 +141,7 @@ def create_elemList_and_nodeList(elemPerBar, elemList=eL, nodeList=nL):
             node2 = elemList[i, 1]
             coord1 = nodeList[node1 - 1, :]
             coord2 = nodeList[node2 - 1, :]
+            elemType = elemTypeList[i]
 
             for j in range(elemPerBar):
                 alpha = (j+1) / elemPerBar
@@ -103,10 +153,11 @@ def create_elemList_and_nodeList(elemPerBar, elemList=eL, nodeList=nL):
                     newNode = node2
 
                 elemL[arrayPositionIndex, :] = [node1, newNode]
+                elemTypeL.append(elemType)
                 arrayPositionIndex += 1
 
                 node1 = newNode
-    return np.array(elemL), np.array(nodeL)
+    return np.array(elemL), np.array(nodeL), np.array(elemTypeL)
 
 
 def create_dofList(nodeList=nL):
@@ -131,10 +182,11 @@ def create_locel(dofList, elemList=eL):
     return locel
 
 
-# 1) create elemList and nodeList with create_elemList_and_nodeList
+# 1) create elemList, elemTypeList and nodeList with create_elemList_and_nodeList_and_elemTypeList
 # 2) create dofList with create_dofList
 # 3) create locel with create_locel
 
-elemList, nodeList = create_elemList_and_nodeList(elemPerBar)
+elemList, nodeList, elemTypeList = create_elemList_and_nodeList_and_elemTypeList(
+    elemPerBar)
 dofList = create_dofList(nodeList)
 locel = create_locel(dofList, elemList)
