@@ -105,13 +105,10 @@ def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTy
         K_global[np.ix_(dofIndices, dofIndices)] += K_es
 
     # Add lumped masses
-    lumpedNodes = [3, 4, 5, 6, 14, 15, 16, 17]
-    lumpedMass = 500/8
-    M_global = addLumpedMasses(M_global, lumpedNodes, lumpedMass)
 
     # Reduce matrices by applying clamped boundary conditions
     constrainedDOFs = []
-    constrainedNodes = [1, 6, 12, 17]
+    constrainedNodes = [1]
     for i in range(len(constrainedNodes)):
         node = constrainedNodes[i]
         constrainedDOFs.extend(dofList[node-1, :] - 1)

@@ -1,7 +1,7 @@
 import math
 
 
-elemPerBar = 5
+elemPerBar = 20
 
 
 l_horizontal = 3.0 / elemPerBar
