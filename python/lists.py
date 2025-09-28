@@ -1,5 +1,7 @@
 import numpy as np
 from constants import elemPerBar
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 eL = np.array([[1, 2],  # elemList with initial geometry of 1 elem per bar
                [2, 3],
@@ -58,7 +60,7 @@ nL = np.array([[0, 4, 1],   # nodeList with initial geometry of 1 elem per bar
               [1.5, 4, 0],
               [4.5, 4, 0],
               [7.5, 4, 0],
-              [10/5, 4, 0],
+              [10.5, 4, 0],
               [13.5, 4, 0],
               [0, 0, 1],
               [3, 0, 1],
@@ -157,7 +159,7 @@ def create_elemList_and_nodeList_and_elemTypeList(elemPerBar, elemList=eL, nodeL
                 arrayPositionIndex += 1
 
                 node1 = newNode
-    return np.array(elemL), np.array(nodeL), np.array(elemTypeL)
+    return np.array(elemL), np.array(nodeL), np.array(elemTypeL, dtype=int)
 
 
 def create_dofList(nodeList=nL):
@@ -182,6 +184,30 @@ def create_locel(dofList, elemList=eL):
     return locel
 
 
+def plot_structure(elemList, nodeList):
+    # Plotting
+    fig = plt.figure(figsize=(10, 7))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot nodes
+    ax.scatter(nodeList[:, 0], nodeList[:, 1],
+               nodeList[:, 2], c='r', s=50, label='Nodes')
+
+    # Plot elements as lines connecting nodes
+    for elem in elemList:
+        x = [nodeList[elem[0]-1, 0], nodeList[elem[1]-1, 0]]
+        y = [nodeList[elem[0]-1, 1], nodeList[elem[1]-1, 1]]
+        z = [nodeList[elem[0]-1, 2], nodeList[elem[1]-1, 2]]
+        ax.plot(x, y, z, 'b')
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_title('3D Frame Structure')
+    ax.legend()
+    plt.show()
+
+
 # 1) create elemList, elemTypeList and nodeList with create_elemList_and_nodeList_and_elemTypeList
 # 2) create dofList with create_dofList
 # 3) create locel with create_locel
@@ -190,3 +216,6 @@ elemList, nodeList, elemTypeList = create_elemList_and_nodeList_and_elemTypeList
     elemPerBar)
 dofList = create_dofList(nodeList)
 locel = create_locel(dofList, elemList)
+
+
+# plot_structure(elemList, nodeList)

@@ -64,7 +64,7 @@ def stiffness_matrix(L, A, Iy, Iz, Jx, E, G):
     return K
 
 
-M_frame_hor = stiffness_matrix(l_horizontal, A1, Iy1, Iz1, Jx1, E, G)
-M_frame_diag = stiffness_matrix(l_diagonal, A1, Iy1, Iz1, Jx1, E, G)
-M_support_diag = stiffness_matrix(l_diagonal, A2, Iy2, Iz2, Jx2, E, G)
-M_support_trans = stiffness_matrix(l_transverse, A2, Iy2, Iz2, Jx2, E, G)
+K_frame_hor = stiffness_matrix(l_horizontal, A1, Iy1, Iz1, Jx1, E, G)
+K_frame_diag = stiffness_matrix(l_diagonal, A1, Iy1, Iz1, Jx1, E, G)
+K_support_diag = stiffness_matrix(l_diagonal, A2, Iy2, Iz2, Jx2, E, G)
+K_support_trans = stiffness_matrix(l_transverse, A2, Iy2, Iz2, Jx2, E, G)
