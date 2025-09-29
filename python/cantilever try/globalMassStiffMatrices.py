@@ -1,7 +1,7 @@
 from constants import *
 from elemMassMatrices import M_frame_hor, M_frame_diag, M_support_diag, M_support_trans
 from elemStiffnessMatrices import K_frame_hor, K_frame_diag, K_support_diag, K_support_trans
-from lists import elemList, nodeList, elemTypeList, dofList, locel
+from mesh import elemList, nodeList, elemTypeList, dofList, locel
 
 import numpy as np
 
