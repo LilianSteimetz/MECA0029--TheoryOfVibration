@@ -1,15 +1,11 @@
 import numpy as np
-from constants import l_horizontal, l_diagonal, l_transverse
+from constants import *
 from math import pi
 
-E = 210 * 10**9
-nu = 0.3
 G = E / (2 * (1 + nu))
 
-ro1 = 0.06
-ri1 = 0.055
-ro2 = 0.035
-ri2 = 0.032
+ri1 = ro1 - e1
+ri2 = ro2 - e2
 
 A1 = pi * (ro1**2 - ri1**2)
 Iy1 = (pi / 4.0) * (ro1**4 - ri1**4)
