@@ -45,7 +45,7 @@ eigvecs = eigvecs_full
 
 
 # Visualization of a mode shape
-mode_idx = 0  # mode to visualize
+mode_idx = plot_mode  # mode to visualize
 
 
 U = np.zeros((nNodes, 3))  # x, y, z displacement per node
@@ -54,7 +54,7 @@ for i in range(nNodes):
     U[i, 1] = eigvecs[dofList[i, 1]-1, mode_idx]  # y
     U[i, 2] = eigvecs[dofList[i, 2]-1, mode_idx]  # z
 
-plot_structure(elemList, nodeList + U*0.5)
+plot_structure(elemList, nodeList + U*0)
 
 """
 # use your assembled global matrices (before reduction or after? use the reduced ones you feed the solver)
