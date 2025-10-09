@@ -2,22 +2,9 @@ import numpy as np
 from constants import *
 from math import pi
 
-ri1 = ro1 - e1
-ri2 = ro2 - e2
 
-rho = 7800  # Density in kg/m^3
-A1 = pi * (ro1**2 - (ri1)**2)
-A2 = pi * (ro2**2 - (ri2)**2)
-
-
-I1 = pi/4 * (ro1**4 - (ri1)**4)
-I2 = pi/4 * (ro2**4 - (ri2)**4)
-
-r_squared1 = I1/A1
-r_squared2 = I2/A2
-
-
-def mass_matrix(L, A, r_squared, rho):
+def mass_matrix(L, A, I, rho):
+    r_squared = I / A
 
     M = np.zeros((12, 12))
 
@@ -63,9 +50,3 @@ def mass_matrix(L, A, r_squared, rho):
     M = M + np.triu(M, 1).T
 
     return rho * A * L * M
-
-
-M_frame_hor = mass_matrix(l_horizontal, A1, r_squared1, rho)
-M_frame_diag = mass_matrix(l_diagonal, A1, r_squared2, rho)
-M_support_diag = mass_matrix(l_diagonal, A2, r_squared2, rho)
-M_support_trans = mass_matrix(l_transverse, A2, r_squared2, rho)

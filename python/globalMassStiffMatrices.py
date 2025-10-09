@@ -1,6 +1,6 @@
 from constants import *
-from elemMassMatrices import M_frame_hor, M_frame_diag, M_support_diag, M_support_trans
-from elemStiffnessMatrices import K_frame_hor, K_frame_diag, K_support_diag, K_support_trans
+from elemMassMatrices import mass_matrix
+from elemStiffnessMatrices import stiffness_matrix
 from mesh import elemList, nodeList, elemTypeList, dofList, locel
 from geometry import constrainedNodes, lumpedNodes
 import numpy as np
@@ -69,22 +69,25 @@ def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTy
 
     for i in range(np.shape(elemList)[0]):
         elemType = elemTypeList[i]
+        elemLength = np.linalg.norm(nodeList[elemList[i, 1]-1, :] -
+                                    nodeList[elemList[i, 0]-1, :])
+        l = elemLength
         if elemType == 1:
-            M_elem = M_frame_hor
-            K_elem = K_frame_hor
-            l = l_horizontal
+            A = A1
+            Iy = Iy1
+            Iz = Iz1
+            Jx = Jx1
+            I = Iy1  # for mass matrix
+
         elif elemType == 2:
-            M_elem = M_frame_diag
-            K_elem = K_frame_diag
-            l = l_diagonal
-        elif elemType == 3:
-            M_elem = M_support_diag
-            K_elem = K_support_diag
-            l = l_diagonal
-        elif elemType == 4:
-            M_elem = M_support_trans
-            K_elem = K_support_trans
-            l = l_transverse
+            A = A2
+            Iy = Iy2
+            Iz = Iz2
+            Jx = Jx2
+            I = Iy2  # for mass matrix
+
+        K_elem = stiffness_matrix(l, A, Iy, Iz, Jx, E, G)
+        M_elem = mass_matrix(l, A, I, rho)
 
         # Rotation matrix for the current element
         R_12x12 = create_rotation_matrix_12x12(

@@ -29,8 +29,10 @@ def compute_total_mass(M):
 
 M, K = create_globalMass_and_globalStiffness(constrainedNodes=[])
 total_mass = compute_total_mass(M)
+
 print(
     f"Total mass of the structure, using translation rbm : {total_mass:.2f} kg")
+
 
 """ Computation of the real mass"""
 
