@@ -8,7 +8,8 @@ from scipy.sparse.linalg import eigsh
 """ Computation of the 6 1st natural frequencies and mode shapes of the structure """
 M_global, K_global = create_globalMass_and_globalStiffness()
 
-eigvals, eigvecs = eigsh(K_global, k=6, M=M_global, sigma=0.0, which='LM')
+eigvals, eigvecs = eigsh(K_global, k=desiredFreqNb,
+                         M=M_global, sigma=0.0, which='LM')
 
 nat_freqs = np.sqrt(eigvals)/(2*np.pi)
 

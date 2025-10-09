@@ -3,6 +3,29 @@ import numpy as np
 constrainedNodes = [1, 6, 12, 17]
 lumpedNodes = [3, 4, 5, 6, 14, 15, 16, 17]
 
+nL = np.array([[0, 4, 1],   # nodeList with initial geometry of 1 elem per bar
+              [3, 4, 1],
+              [6, 4, 1],
+              [9, 4, 1],
+              [12, 4, 1],
+              [15, 4, 1],
+              [1.5, 4, 0],
+              [4.5, 4, 0],
+              [7.5, 4, 0],
+              [10.5, 4, 0],
+              [13.5, 4, 0],
+              [0, 0, 1],
+              [3, 0, 1],
+              [6, 0, 1],
+              [9, 0, 1],
+              [12, 0, 1],
+              [15, 0, 1],
+              [1.5, 0, 0],
+              [4.5, 0, 0],
+              [7.5, 0, 0],
+              [10.5, 0, 0],
+              [13.5, 0, 0]])
+
 
 eL = np.array([[1, 2],  # elemList with initial geometry of 1 elem per bar
                [2, 3],
@@ -52,28 +75,6 @@ eL = np.array([[1, 2],  # elemList with initial geometry of 1 elem per bar
                [5, 16],
                [11, 22]])
 
-nL = np.array([[0, 4, 1],   # nodeList with initial geometry of 1 elem per bar
-              [3, 4, 1],
-              [6, 4, 1],
-              [9, 4, 1],
-              [12, 4, 1],
-              [15, 4, 1],
-              [1.5, 4, 0],
-              [4.5, 4, 0],
-              [7.5, 4, 0],
-              [10.5, 4, 0],
-              [13.5, 4, 0],
-              [0, 0, 1],
-              [3, 0, 1],
-              [6, 0, 1],
-              [9, 0, 1],
-              [12, 0, 1],
-              [15, 0, 1],
-              [1.5, 0, 0],
-              [4.5, 0, 0],
-              [7.5, 0, 0],
-              [10.5, 0, 0],
-              [13.5, 0, 0]])
 
 etL = np.array([1,  # 1 = frame horizontal, 2 = frame diagonal, 3 = support diagonal, 4 = support transverse
                 1,

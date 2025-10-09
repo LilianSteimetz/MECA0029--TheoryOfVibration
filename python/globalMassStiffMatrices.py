@@ -42,11 +42,14 @@ def create_rotation_matrix_12x12(elemList, nodeList, l, i):
 
 
 def addLumpedMasses(M, lumpedNodes, lumpedMass):
+    nbLumped = len(lumpedNodes)
+    if nbLumped == 0:
+        return M
     for i in range(len(lumpedNodes)):
         node = lumpedNodes[i]
         for i in range(3):
             dofIdx = 6 * (node - 1) + i
-            M[dofIdx, dofIdx] += lumpedMass
+            M[dofIdx, dofIdx] += lumpedMass / nbLumped
     return M
 
 
