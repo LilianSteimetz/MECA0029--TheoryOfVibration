@@ -2,6 +2,7 @@ from constants import *
 from elemMassMatrices import M_frame_hor, M_frame_diag, M_support_diag, M_support_trans
 from elemStiffnessMatrices import K_frame_hor, K_frame_diag, K_support_diag, K_support_trans
 from mesh import elemList, nodeList, elemTypeList, dofList, locel
+from geometry import constrainedNodes
 
 import numpy as np
 
@@ -108,7 +109,6 @@ def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTy
 
     # Reduce matrices by applying clamped boundary conditions
     constrainedDOFs = []
-    constrainedNodes = [1]
     for i in range(len(constrainedNodes)):
         node = constrainedNodes[i]
         constrainedDOFs.extend(dofList[node-1, :] - 1)

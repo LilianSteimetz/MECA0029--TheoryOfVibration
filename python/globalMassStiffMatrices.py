@@ -2,7 +2,7 @@ from constants import *
 from elemMassMatrices import M_frame_hor, M_frame_diag, M_support_diag, M_support_trans
 from elemStiffnessMatrices import K_frame_hor, K_frame_diag, K_support_diag, K_support_trans
 from mesh import elemList, nodeList, elemTypeList, dofList, locel
-
+from geometry import constrainedNodes, lumpedNodes
 import numpy as np
 
 
@@ -16,7 +16,7 @@ def create_rotation_matrix_12x12(elemList, nodeList, l, i):
 
     if abs(np.dot(e_xLoc, e_zRef)) > 0.99:
         # choose another reference (global x) when nearly parallel
-        e_ref = np.array([1.0, 0.0, 0.0])
+        e_ref = np.array([1.0, 1.0, 1.0])
     else:
         e_ref = e_zRef
     e_xLoc /= np.linalg.norm(e_xLoc)
@@ -44,8 +44,9 @@ def create_rotation_matrix_12x12(elemList, nodeList, l, i):
 def addLumpedMasses(M, lumpedNodes, lumpedMass):
     for i in range(len(lumpedNodes)):
         node = lumpedNodes[i]
-        dofIdx = 6 * (node - 1) + 2  # vertical dof
-        M[dofIdx, dofIdx] += lumpedMass
+        for i in range(3):
+            dofIdx = 6 * (node - 1) + i
+            M[dofIdx, dofIdx] += lumpedMass
     return M
 
 
@@ -59,11 +60,10 @@ def constraintMatReduction(K, M, constrainedDOFs):
     return K_reduced, M_reduced
 
 
-def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTypeList, dofList=dofList, locel=locel):
+def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTypeList, dofList=dofList, locel=locel, constrainedNodes=constrainedNodes, lumpedNodes=lumpedNodes, lumpedMass=lumpedMass):
     nDOF = np.max(dofList)
     M_global = np.zeros((nDOF, nDOF))
     K_global = np.zeros((nDOF, nDOF))
-    elMatSize = 12
     # reference axis for the local axes construction,
     # taken as e_z global because no vertical element
 
@@ -105,13 +105,10 @@ def create_globalMass_and_globalStiffness(elemList=elemList, elemTypeList=elemTy
         K_global[np.ix_(dofIndices, dofIndices)] += K_es
 
     # Add lumped masses
-    lumpedNodes = [3, 4, 5, 6, 14, 15, 16, 17]
-    lumpedMass = 500/8
     M_global = addLumpedMasses(M_global, lumpedNodes, lumpedMass)
 
     # Reduce matrices by applying clamped boundary conditions
     constrainedDOFs = []
-    constrainedNodes = [1, 6, 12, 17]
     for i in range(len(constrainedNodes)):
         node = constrainedNodes[i]
         constrainedDOFs.extend(dofList[node-1, :] - 1)

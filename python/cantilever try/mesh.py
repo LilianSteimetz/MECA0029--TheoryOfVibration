@@ -1,14 +1,7 @@
 import numpy as np
 from constants import elemPerBar
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-
-# Test with a cantilever beam
-eL = np.array([[1, 2]])
-nL = np.array([[0, 0, 0],
-               [3, 0, 0]])
-etL = np.array([1])
+from geometry import eL, nL, etL
 
 
 def interpolation(node1, node2, alpha):
@@ -73,15 +66,15 @@ def create_locel(dofList, elemList=eL):
 
 
 def plot_structure(elemList, nodeList):
-    # Plotting
+
     fig = plt.figure(figsize=(10, 7))
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot nodes
     ax.scatter(nodeList[:, 0], nodeList[:, 1],
-               nodeList[:, 2], c='r', s=50, label='Nodes')
+               nodeList[:, 2], c='r', s=5, label='Nodes')
 
-    # Plot elements as lines connecting nodes
+    # Plot elements
     for elem in elemList:
         x = [nodeList[elem[0]-1, 0], nodeList[elem[1]-1, 0]]
         y = [nodeList[elem[0]-1, 1], nodeList[elem[1]-1, 1]]
@@ -104,5 +97,6 @@ elemList, nodeList, elemTypeList = create_elemList_and_nodeList_and_elemTypeList
     elemPerBar)
 dofList = create_dofList(nodeList)
 locel = create_locel(dofList, elemList)
+
 
 # plot_structure(elemList, nodeList)

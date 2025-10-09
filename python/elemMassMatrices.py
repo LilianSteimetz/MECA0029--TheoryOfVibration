@@ -1,13 +1,17 @@
 import numpy as np
-from constants import l_horizontal, l_diagonal, l_transverse
+from constants import *
 from math import pi
 
-rho = 7800  # Density in kg/m^3
-A1 = pi * (0.06**2 - 0.055**2)
-A2 = pi * (0.035**2 - 0.032**2)
+ri1 = ro1 - e1
+ri2 = ro2 - e2
 
-I1 = pi/4 * (0.06**4 - 0.055**4)
-I2 = pi/4 * (0.035**4 - 0.032**4)
+rho = 7800  # Density in kg/m^3
+A1 = pi * (ro1**2 - (ri1)**2)
+A2 = pi * (ro2**2 - (ri2)**2)
+
+
+I1 = pi/4 * (ro1**4 - (ri1)**4)
+I2 = pi/4 * (ro2**4 - (ri2)**4)
 
 r_squared1 = I1/A1
 r_squared2 = I2/A2
