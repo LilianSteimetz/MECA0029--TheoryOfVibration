@@ -34,6 +34,12 @@ def mode_acc(omega, eigvals, eigvecs, M, K, k):
     
     return np.linalg.inv(K) + (omega**2 * H)
 
+def FRF_accel(omega, H, s, excitation_DOF):
+    
+    a = -omega**2 * H @ s
+    
+    return np.abs(a[excitation_DOF])
+    
 """ Computation of the natural frequencies and mode shapes of the structure """
 M_global, K_global = create_globalMass_and_globalStiffness()
 eigvals, eigvecs = linalg.eig(K_global, M_global)
@@ -54,11 +60,9 @@ s[excitation_DOF] = 500 # Amplitude of the force applied at node 16 in the Y-dir
 H_frf = np.zeros((nDOf_reduced, nDOf_reduced), dtype=complex)
 H_frf = FRF(omega_exc, eigvals, eigvecs, M_global, nDOf_reduced)
 
-#H_dis = np.zeros((k, k), dtype=complex)
 H_dis = np.zeros((nDOf_reduced, nDOf_reduced), dtype=complex)
 H_dis = FRF(omega_exc, eigvals, eigvecs, M_global, k)
 
-#H_acc = np.zeros((k, k), dtype=complex)
 H_acc = np.zeros((nDOf_reduced, nDOf_reduced), dtype=complex)
 H_acc = mode_acc(omega_exc, eigvals, eigvecs, M_global, K_global, k)
 
@@ -66,16 +70,45 @@ x_frf = H_frf @ s
 x_dis = H_dis @ s
 x_acc = H_acc @ s
 
+"""Computing PSD and RMS """
+A = FRF_accel(omega_exc, H_frf, s, excitation_DOF)
+
+rms  = A / np.sqrt(2)
+print(f"RMS value at node 16 in Y-direction: {rms:.4f} m/s²")
+
+Fs = 200
+T = 20
+N = int(T * Fs)
+freq = np.fft.rfftfreq(N, 1/Fs)
+dw = 2*np.pi * (freq[1] - freq[0])
+psd = np.zeros(len(freq))
+idx = np.argmin(np.abs((2*np.pi*freq) - omega_exc))
+psd[idx] = A**2 / (2* dw)
+
+psd_value = np.trapezoid(psd, 2*np.pi*freq) # Value of the integration of PSD should be = rms**2 (verification)
+print(f"Value of the integration of PSD: {psd_value:.4f} m²/s⁴")
+print(f"RMS value squared : {rms**2:.4f} m²/s⁴")
+
+
 
 """ Plotting the time response at node 16 in the Y-direction for each method"""
 t = np.linspace(0, 1, 1000)
 
-plt.plot(t, np.real(x_frf[excitation_DOF] * np.cos(omega_exc * t)), label='Exact solution (FRF)')
+plt.plot(t, np.real(x_frf[excitation_DOF] * np.cos(omega_exc * t)), label='Exact solution')
 plt.plot(t, np.real(x_dis[excitation_DOF] * np.cos(omega_exc * t)), label='Displacement mode approximation')
 plt.plot(t, np.real(x_acc[excitation_DOF] * np.cos(omega_exc * t)), label='Acceleration mode approximation')
 plt.xlabel('Time (s)')
 plt.ylabel('Displacement (m)')
 plt.title('Response at node 16 in Y-direction')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+""" Plotting the PSD over the frequency """
+plt.plot(2*np.pi*freq, psd, label='PSD(w)')
+plt.xlabel('Frequency (rad/s)')
+plt.ylabel('PSD (m²/s⁴)')
+plt.title('Power Spectral Density of the acceleration at node 16 in Y-direction')
 plt.legend()
 plt.grid(True)
 plt.show()
