@@ -1,8 +1,10 @@
+from geometry import constrainedNodes
+import numpy as np
 import math
 from math import pi
 
 
-elemPerBar = 5
+elemPerBar = 2
 lumpedMass = 500
 desiredFreqNb = 6
 

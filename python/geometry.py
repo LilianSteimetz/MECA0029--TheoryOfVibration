@@ -2,6 +2,8 @@ import numpy as np
 
 constrainedNodes = [1, 6, 12, 17]
 lumpedNodes = [3, 4, 5, 6, 14, 15, 16, 17]
+constrainedNodes = np.array(constrainedNodes)
+lumpedNodes = np.array(lumpedNodes)
 
 nL = np.array([[0, 4, 1],   # nodeList with initial geometry of 1 elem per bar
               [3, 4, 1],
