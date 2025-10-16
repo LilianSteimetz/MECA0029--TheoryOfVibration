@@ -73,11 +73,10 @@ def DFT(t, x_t):
             X_f[k] += x_t[n] * cmath.exp(complex(0, -2*np.pi/N * k*n))
     f = np.zeros(N)
 
-    for k in range(N):
-        if k < N // 2:
-            f[k] = k * fs / N
-        else:
-            f[k] = (k - N) * fs / N
+    # Only take positive frequencies
+    half_N = N // 2
+    f = np.arange(half_N) * fs / N
+    X_f = X_f[:half_N]
 
     return f, X_f
 
@@ -235,6 +234,16 @@ for NMode in ModesVector:
     accMethAmplitudes[NMode-1] = np.real(x_acc[excitation_DOF])
 
 
+plt.plot(ModesVector, np.real(frfAmplitudes), label='FRF amplitude')
+plt.plot(ModesVector, np.real(disMethAmplitudes),
+         label='Mode displacement amplitude')
+plt.plot(ModesVector, np.real(accMethAmplitudes),
+         label='Mode acceleration amplitude')
+plt.title("Amplitude at the excitation DOF")
+plt.legend()
+plt.xticks(ModesVector)
+plt.show()
+
 plt.plot(ModesVector, 100 * np.real(frfAmplitudes - disMethAmplitudes)/np.real(frfAmplitudes),
          label='Mode displacement error')
 plt.plot(ModesVector, 100*np.real(frfAmplitudes - accMethAmplitudes)/np.real(frfAmplitudes),
@@ -277,7 +286,7 @@ plt.show()
 t_true = np.linspace(0, 5, 1000)
 x_t_true = 500 * np.cos(omega_exc * t_true)
 
-t = np.linspace(0, 5, 100)
+t = np.linspace(0, 5, 1000)
 x_t = 500 * np.cos(omega_exc * t)
 
 plt.plot(t, x_t, label='Excitation force')
@@ -290,5 +299,6 @@ plt.show()
 # Plotting the DFT and IDFT functions to check they work well
 
 f, X_f = DFT(t, x_t)
-plt.stem(f, np.abs(X_f), label='DFT of the excitation force')
+plt.stem(f, np.abs(X_f) / np.sum(X_f), label='DFT of the excitation force')
+plt.xlim(0, 10)
 plt.show()
