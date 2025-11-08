@@ -65,7 +65,7 @@ def create_locel(dofList, elemList=eL):
     return locel
 
 
-def plot_structure(elemList, nodeList):
+def plot_structure(elemList, nodeList, view=None):
 
     fig = plt.figure(figsize=(10, 7))
     ax = fig.add_subplot(111, projection='3d')
@@ -84,14 +84,24 @@ def plot_structure(elemList, nodeList):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax.set_title('3D Frame Structure')
-    ax.legend()
-    plt.show()
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
+    plt.tight_layout()
+
+    if view == 'XY':
+        ax.view_init(elev=90, azim=-90)  # XY
+        plt.savefig('plots/mode_6XY_py.png', bbox_inches='tight', pad_inches=0)
+    elif view == 'XZ':
+        ax.view_init(elev=0, azim=90)  # plan XZ vu de face
+        plt.savefig('plots/mode_6XZ_py.png', bbox_inches='tight')
+
+    elif view is None:
+        plt.show()
 
 # 1) create elemList, elemTypeList and nodeList with create_elemList_and_nodeList_and_elemTypeList
 # 2) create dofList with create_dofList
 # 3) create locel with create_locel
+
 
 elemList, nodeList, elemTypeList = create_elemList_and_nodeList_and_elemTypeList(
     elemPerBar)

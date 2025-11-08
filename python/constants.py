@@ -4,7 +4,7 @@ import math
 from math import pi
 
 
-elemPerBar = 2
+elemPerBar = 10
 lumpedMass = 500
 desiredFreqNb = 6
 

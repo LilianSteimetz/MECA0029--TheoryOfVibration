@@ -4,6 +4,7 @@ from mesh import elemList, nodeList, dofList, plot_structure
 import numpy as np
 # eigsh is used like eig but computes a given number of eigenvalues
 from scipy.sparse.linalg import eigsh
+import pandas as pd
 
 """ Computation of the 6 1st natural frequencies and mode shapes of the structure """
 M_global, K_global = create_globalMass_and_globalStiffness()
@@ -52,4 +53,4 @@ for i in range(nNodes):
     U[i, 2] = eigvecs[dofList[i, 2]-1, mode_idx]
 
 
-plot_structure(elemList, nodeList + U*0)
+plot_structure(elemList, nodeList + U*1)

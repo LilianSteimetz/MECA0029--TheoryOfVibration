@@ -177,7 +177,6 @@ print(f"RMS value squared : {rms**2:.4f} m²/s⁴")
 
 """Plots"""
 
-"""
 
 # Plotting the time response at node 16 in the Y-direction for each method
 t = np.linspace(0, 1, 1000)
@@ -204,7 +203,6 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-"""
 
 """ Convergence study of the methods"""
 # done using the excitation of the project statement,
