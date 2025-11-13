@@ -56,5 +56,4 @@ def stiffness_matrix(L, A, Iy, Iz, Jx, E, G):
     K[11, 11] = 4*E*Iz / L
 
     K = K + np.triu(K, 1).T
-
     return K

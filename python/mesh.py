@@ -1,7 +1,7 @@
 import numpy as np
 from constants import elemPerBar
 import matplotlib.pyplot as plt
-from geometry import eL, nL, etL
+from geometry import eL, nL, etL, constrainedNodes
 
 
 def interpolation(node1, node2, alpha):
@@ -98,6 +98,7 @@ def plot_structure(elemList, nodeList, view=None):
     elif view is None:
         plt.show()
 
+
 # 1) create elemList, elemTypeList and nodeList with create_elemList_and_nodeList_and_elemTypeList
 # 2) create dofList with create_dofList
 # 3) create locel with create_locel
@@ -110,3 +111,15 @@ locel = create_locel(dofList, elemList)
 
 
 # plot_structure(elemList, nodeList)
+
+
+def vector_to_constrained(vec):
+    constrainedDOFs = []
+    for i in range(len(constrainedNodes)):
+        node = constrainedNodes[i]
+        constrainedDOFs.extend(dofList[node-1, :] - 1)
+    freeDOFs = np.array([i for i in range(vec.shape[0])
+                        if i not in constrainedDOFs])
+
+    vec = vec[freeDOFs].reshape(-1)
+    return vec

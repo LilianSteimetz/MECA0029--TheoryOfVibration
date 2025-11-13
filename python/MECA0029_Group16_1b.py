@@ -16,7 +16,9 @@ def compute_total_mass(M):
 
     translat_dofs = []
     for i in range(nNodes):
-        translat_dofs.extend([i*6+1])  # ux, uy, uz
+        translat_dofs.extend([i*6+0])  # ux
+        translat_dofs.extend([i*6+1])  # uy
+        translat_dofs.extend([i*6+2])  # uz
 
     # Extract translational block of the global mass matrix
     M_translat = M[np.ix_(translat_dofs, translat_dofs)]
@@ -24,14 +26,15 @@ def compute_total_mass(M):
     # Compute total translational mass
     total_mass = np.sum(M_translat)
 
-    return total_mass
+    # because each mass is counted 3 times
+    return total_mass / 3
 
 
 M, K = create_globalMass_and_globalStiffness(constrainedNodes=[])
 total_mass = compute_total_mass(M)
 
 print(
-    f"Total mass of the structure, using translation rbm : {total_mass:.2f} kg")
+    f"Total mass of the structure, using translation rbm : {total_mass:.6f} kg")
 
 
 """ Computation of the real mass"""
@@ -55,4 +58,4 @@ n_type4 = 9
 real_mass = n_type1 * m_type1 + n_type2 * m_type2 + \
     n_type3 * m_type3 + n_type4 * m_type4 + 500
 print(
-    f"Real mass of the structure : {total_mass:.2f} kg")
+    f"Real mass of the structure : {real_mass:.2f} kg")

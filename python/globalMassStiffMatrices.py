@@ -15,12 +15,12 @@ def create_rotation_matrix_12x12(elemList, nodeList, l, i):
                              nodeList[elemList[i, 1]-1, 2] - nodeList[elemList[i, 0]-1, 2]])
 
     if abs(np.dot(e_xLoc, e_zRef)) > 0.99:
-        # choose another reference (global x) when nearly parallel
+        # choose another reference when nearly parallel
         e_ref = np.array([1.0, 1.0, 1.0])
     else:
         e_ref = e_zRef
     e_xLoc /= np.linalg.norm(e_xLoc)
-    e_yLoc = np.cross(e_zRef, e_xLoc)
+    e_yLoc = np.cross(e_ref, e_xLoc)
     e_yLoc = 1/np.linalg.norm(e_yLoc) * e_yLoc
     e_zLoc = np.cross(e_xLoc, e_yLoc)
 

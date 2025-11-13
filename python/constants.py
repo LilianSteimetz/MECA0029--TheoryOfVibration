@@ -3,10 +3,14 @@ import numpy as np
 import math
 from math import pi
 
-
-elemPerBar = 10
+# part 1
+elemPerBar = 5
 lumpedMass = 500
 desiredFreqNb = 6
+
+# part 3
+gamma_newmark = 1/2
+beta_newmark = 1/4
 
 
 rho = 7800  # Density in kg/m^3
