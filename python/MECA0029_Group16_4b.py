@@ -18,7 +18,7 @@ i = 0
 for node in retained_nodes:
     for dof in range(3):
         retained_dofs[i] = dofList[node-1, dof]
-        retained_dofs[i] -= 6 * np.sum(np.where(constrainedNodes[:] < node))
+        retained_dofs[i] -= 6 * np.sum(constrainedNodes[:] < node)
         i += 1
 
 
@@ -31,7 +31,7 @@ beta_newmark = min(1.1*(1/4 * (gamma_newmark + 1/2)**2), 1)
 f_duration = 0.01  # [s]
 f_dof_idx = dofList[19, 1] - 1  # DOF in Y direction of node 20
 f_dof = f_dof_idx - 6 * \
-    np.sum(np.where(constrainedNodes[:] < 16))
+    np.sum(constrainedNodes[:] < 16)
 
 f_vector = np.zeros(dofList.shape[0] * dofList.shape[1])
 f_vector[f_dof_idx] = 7000  # [N]

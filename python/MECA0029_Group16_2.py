@@ -75,7 +75,7 @@ omega_exc = 2 * np.pi * 2.4
 # Construction of s, the vector of amplitude of the excitation (at each DOF)
 excitation_DOF = dofList[15, 1] - 1  # DOF in Y direction of node 16
 excitation_DOF = excitation_DOF - 6 * \
-    np.sum(np.where(constrainedNodes[:] < 16))
+    np.sum(constrainedNodes[:] < 16)
 
 s = np.zeros(nDOf_reduced)
 s[excitation_DOF] = 500  # [N]

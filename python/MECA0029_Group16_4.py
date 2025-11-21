@@ -27,7 +27,7 @@ i = 0
 for node in retained_nodes:
     for dof in range(3):
         retained_dofs[i] = dofList[node-1, dof]
-        retained_dofs[i] -= 6 * np.sum(np.where(constrainedNodes[:] < node))
+        retained_dofs[i] -= 6 * np.sum(constrainedNodes[:] < node)
         i += 1
 
 
