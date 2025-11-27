@@ -36,7 +36,7 @@ for j in range(6):
         # ou ["DejaVu Serif"], ["STIX"], etc.
         "font.serif": ["Arial"],
         "font.size": 20,
-        "axes.labelsize": 20,
+        "axes.labelsize": 24,
         "xtick.labelsize": 16,
         "ytick.labelsize": 16,
         "legend.fontsize": 16,
@@ -45,8 +45,8 @@ for j in range(6):
     fig = plt.figure("Figure X", figsize=(9, 6))
 
     # axes titles
-    plt.xlabel('Number of elements per beam (N)')
-    plt.ylabel('Frequency (Hz)')
+    plt.xlabel(r'Number of elements per beam $N$')
+    plt.ylabel('Frequency [Hz]')
     plt.plot(numbers_py, f_py[j, :], 'o-', label=f'python', linewidth=1)
     plt.plot(numbers_NX, f_NX[j, :], 's--', label=f'NX', linewidth=1)
 
@@ -64,6 +64,7 @@ for j in range(6):
     plt.legend()
 
     plt.tight_layout()
+    # plt.show()
 
     fig.savefig(f'pt1_convergence/convergencePlotF{j+1}.pdf', dpi=300)
     plt.close()  # Ferme la figure pour éviter la superposition

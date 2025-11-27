@@ -60,7 +60,7 @@ plt.rcParams.update({
     "font.family": "DejaVu Serif",
     "font.serif": ["Arial"],
     "font.size": 20,
-    "axes.labelsize": 20,
+    "axes.labelsize": 24,
     "xtick.labelsize": 16,
     "ytick.labelsize": 16,
     "legend.fontsize": 10,  # Small legend to fit all 6 modes

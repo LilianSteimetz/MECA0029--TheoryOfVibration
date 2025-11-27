@@ -45,11 +45,29 @@ nat_freqs_full, eigvecs_full = eigvals_eigvectors_to_sorted_freqs_modes(
     eigvals, eigvecs)
 
 
+""" Guyan-Irons 6 1st frequencies & modes"""
+K_GI, M_GI, R_GI = guyansIrons(K_global, M_global, retained_dofs)
+time_start = time.perf_counter()
+eigvals, eigvecs = eigh(K_GI, M_GI, subset_by_index=[
+    0, desiredFreqNb-1])
+time_end = time.perf_counter()
+time_GI = time_end - time_start
+
+nat_freqs_GI, eigvecs_GI = eigvals_eigvectors_to_sorted_freqs_modes(
+    eigvals, eigvecs)
+eigvecs_GI = R_GI @ eigvecs_GI  # map back to full DOFs
+
+
+errors_GI = np.abs((nat_freqs_GI - nat_freqs_full)/nat_freqs_full)*100
+errors_GI = errors_GI.round(3)
+
+
 """ Craig-Bampton 6 1st frequencies & modes"""
 max_n_modes = 50
 errors_CB = np.zeros((max_n_modes, 6))
 times_reduction = np.zeros(max_n_modes)
 times_system = np.zeros(max_n_modes)
+nat_freqs_CB = np.zeros((max_n_modes, 6))
 
 for i in range(max_n_modes):
     print(f'Number of retained internal modes: {i+1}')
@@ -69,16 +87,21 @@ for i in range(max_n_modes):
     time_end = time.perf_counter()
     times_system[i] = time_end - time_start
 
-    nat_freqs_CB, eigvecs_CB = eigvals_eigvectors_to_sorted_freqs_modes(
+    nat_freqs_CB[i, :], eigvecs_CB = eigvals_eigvectors_to_sorted_freqs_modes(
         eigvals, eigvecs)
     eigvecs_CB = R_CB @ eigvecs_CB  # map back to full DOFs
     errors_CB[i, :] = np.abs(
-        (nat_freqs_CB - nat_freqs_full)/nat_freqs_full)*100
+        (nat_freqs_CB[i, :] - nat_freqs_full)/nat_freqs_full)*100
 
 df = pandas.DataFrame({
     'Retained internal modes': np.arange(1, max_n_modes + 1),
     'Reduction time (s)': times_reduction,
     'Eigenproblem time (s)': times_system,
-    **{f'Mode {i+1} error (%)': errors_CB[:, i] for i in range(6)}
+    **{f'CB Mode {i+1} error (%)': errors_CB[:, i] for i in range(6)},
+    **{f'CB Mode {i+1} freq': nat_freqs_CB[:, i] for i in range(6)},
+    **{f'GI Mode {i+1} freq': np.full(max_n_modes, nat_freqs_GI[i]) for i in range(6)},
+    **{f'GI Mode {i+1} error (%)': np.full(max_n_modes, errors_GI[i]) for i in range(6)},
+    **{f'Full Mode {i+1} freq': np.full(max_n_modes, nat_freqs_full[i]) for i in range(6)},
 })
+
 df.to_csv('pt4/CB_errors.csv', index=False)

@@ -13,22 +13,22 @@ import time
 
 
 # integration parameters
-gamma_newmark = 3/4
-beta_newmark = min(1.1*(1/4 * (gamma_newmark + 1/2)**2), 1)
+gamma_newmark = 0.91
+beta_newmark = 1/2
 
 # transient excitation parameters:
 f_duration = 0.01  # [s]
 f_dof_idx = dofList[19, 1] - 1  # DOF in Y direction of node 20
 f_dof = f_dof_idx - 6 * \
-    np.sum(constrainedNodes[:] < 16)
+    np.sum(constrainedNodes[:] < 20)
 
 f_vector = np.zeros(dofList.shape[0] * dofList.shape[1])
 f_vector[f_dof_idx] = 7000  # [N]
 
 f_vector = vector_to_constrained(f_vector)
 
-timeStep = 0.00001  # [s]
-integTime = 0.02  # [s]
+timeStep = 0.0001  # [s]
+integTime = 5  # [s]
 
 
 M_global, K_global = create_globalMass_and_globalStiffness()
@@ -51,8 +51,9 @@ plt.ylabel('Displacement [m]')
 plt.xlim(0, integTime)
 plt.legend()
 plt.tight_layout()
-plt.savefig(
-    f'plots/pt3_t_{elemPerBar}EPB_{integTime}T_{timeStep}dt.pdf', dpi=300)
+# plt.savefig(f'plots/pt3_t_{elemPerBar}EPB_{integTime}T_{timeStep}dt.pdf', dpi=300)
+plt.show()
+
 
 # plt.vlines(x=f_duration, ymin=min(q[f_dof]), ymax=max(q[f_dof]), colors= 'r', linestyles = 'dashed', label = 'End of excitation')
 plt.close()

@@ -34,10 +34,10 @@ for node in retained_nodes:
 M_global, K_global = create_globalMass_and_globalStiffness()
 
 """ full model 6 1st frequencies & modes"""
-time_start = time.time()
+time_start = time.perf_counter()
 eigvals, eigvecs = eigsh(K_global, k=desiredFreqNb,
                          M=M_global, sigma=0.0, which='LM')
-time_end = time.time()
+time_end = time.perf_counter()
 time_full = time_end - time_start
 
 nat_freqs_full, eigvecs_full = eigvals_eigvectors_to_sorted_freqs_modes(
@@ -45,12 +45,18 @@ nat_freqs_full, eigvecs_full = eigvals_eigvectors_to_sorted_freqs_modes(
 print("Natural Frequencies, full model (Hz):")
 print(nat_freqs_full)
 
+
 """ Guyan-Irons 6 1st frequencies & modes"""
+time_start = time.perf_counter()
 K_GI, M_GI, R_GI = guyansIrons(K_global, M_global, retained_dofs)
-time_start = time.time()
+time_end = time.perf_counter()
+print("GI reduction time")
+print(time_end - time_start)
+
+time_start = time.perf_counter()
 eigvals, eigvecs = eigsh(K_GI, k=desiredFreqNb,
                          M=M_GI, sigma=0.0, which='LM')
-time_end = time.time()
+time_end = time.perf_counter()
 time_GI = time_end - time_start
 
 nat_freqs_GI, eigvecs_GI = eigvals_eigvectors_to_sorted_freqs_modes(
@@ -65,14 +71,19 @@ errors_GI = errors_GI.round(3)
 print("Guyan-Irons relative errors (%):")
 print(errors_GI)
 
+
 """ Craig-Bampton 6 1st frequencies & modes"""
 n_internal_modes = 7
+time_start = time.perf_counter()
 K_CB, M_CB, R_CB = CraigBampton(
     K_global, M_global, retained_dofs, n_internal_modes)
-time_start = time.time()
+time_end = time.perf_counter()
+print("CB reduction time")
+print(time_end - time_start)
+time_start = time.perf_counter()
 eigvals, eigvecs = eigsh(K_CB, k=desiredFreqNb,
                          M=M_CB, sigma=0.0, which='LM')
-time_end = time.time()
+time_end = time.perf_counter()
 time_CB = time_end - time_start
 nat_freqs_CB, eigvecs_CB = eigvals_eigvectors_to_sorted_freqs_modes(
     eigvals, eigvecs)
@@ -85,6 +96,7 @@ errors_CB = errors_CB.round(3)
 print("Craig-Bampton relative errors (%):")
 print(errors_CB)
 
+
 print(
     f"Computation times (full, GI, CB): {time_full:.6f}, {time_GI:.6f}, {time_CB:.6f}  s")
 
@@ -93,11 +105,11 @@ print(
 
 mac_matrix = macMatrix(eigvecs_full, eigvecs_GI)   # choose GI or CB
 
-plotMacMatrix(mac_matrix, title="MAC Matrix: Full vs Guyan–Irons Modes",
-              show=True)
+plotMacMatrix(mac_matrix, title="",
+              show=True, save_path="pt4/MAC_Full_vs_GI.pdf", red='GI')
 
 """Plot mac matrix for CB vs Full model"""
 mac_matrix = macMatrix(eigvecs_full, eigvecs_CB)   # choose GI or CB
 
-plotMacMatrix(mac_matrix, title="MAC Matrix: Full vs Craig–Bampton Modes",
-              show=True)
+plotMacMatrix(mac_matrix, title="",
+              show=True, save_path="pt4/MAC_Full_vs_CB.pdf", red='CB')
