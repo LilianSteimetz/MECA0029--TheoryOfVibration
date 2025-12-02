@@ -13,8 +13,8 @@ import time
 
 
 # integration parameters
-gamma_newmark = 0.91
-beta_newmark = 1/2
+gamma_newmark = 1/2
+beta_newmark = 1/4 - 0.01
 
 # transient excitation parameters:
 f_duration = 0.01  # [s]
@@ -32,7 +32,7 @@ integTime = 5  # [s]
 
 
 M_global, K_global = create_globalMass_and_globalStiffness()
-C_global = create_damping_matrix(M_global, K_global)
+C_global = np.zeros_like(K_global)  # create_damping_matrix(M_global, K_global)
 """
 q, q_dot, q_ddot, t = time_integ(
     K_global, M_global, C_global, f_vector, f_duration, timeStep, integTime, gamma=gamma_newmark, beta=beta_newmark)
