@@ -1,6 +1,6 @@
 from constants import *
 from globalMassStiffMatrices import create_globalMass_and_globalStiffness
-from mesh import elemList, nodeList, dofList, plot_structure
+from mesh import elemList, nodeList, dofList, plot_structure, plot_structureBis
 import numpy as np
 # eigsh is used like eig but computes a given number of eigenvalues
 from scipy.sparse.linalg import eigsh
@@ -53,4 +53,4 @@ for i in range(nNodes):
     U[i, 2] = eigvecs[dofList[i, 2]-1, mode_idx]
 
 
-plot_structure(elemList, nodeList + U*1)
+plot_structureBis(elemList, nodeList + U*0)

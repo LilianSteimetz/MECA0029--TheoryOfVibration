@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 slide_params = {
     # Text Sizes (Large for visibility)
     'font.size': 20,           # General default
-    'axes.labelsize': 22,      # x and y labels
+    'axes.labelsize': 28,      # x and y labels
     'axes.titlesize': 24,      # Title
     'xtick.labelsize': 20,     # Tick numbers
     'ytick.labelsize': 20,
     'legend.fontsize': 18,     # Legend text
 
     # Line & Marker Geometries (Thick for projectors)
-    'lines.linewidth': 3.5,    # Thicker data lines
-    'lines.markersize': 10,    # Much larger markers (default was too small)
+    'lines.linewidth': 5,    # Thicker data lines
+    'lines.markersize': 2,    # Much larger markers (default was too small)
     'lines.markeredgewidth': 0,  # Remove marker outline for cleaner look
 
     # Structural Geometries
@@ -61,7 +61,7 @@ def plotSlides(x, y,  marker='o', xLabel=None, yLabel=None, label=None, yScaleLo
     plt.savefig(savePath + '.svg', transparent=True)
 
 
-def plotSlidesMulti(x, y, marker='o', xLabel=None, yLabel=None, labels=None, yScaleLog=False, savePath=None, hline=None, vline=None):  # multiple lines to plot
+def plotSlidesMulti(x, y, marker='o', xLabel=None, yLabel=None, labels=None, yScaleLog=False, savePath=None, hline=None, vline=None, xlim=None):  # multiple lines to plot
 
     # renaming
     labeling = labels
@@ -85,7 +85,9 @@ def plotSlidesMulti(x, y, marker='o', xLabel=None, yLabel=None, labels=None, ySc
     if hline is not None:
         ax.hlines(hline, xmin=np.min(x), xmax=np.max(
             x), color='red', linestyles='--')
-
+    if xlim is not None:
+        ax.set_xlim(0, xlim)
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15),
               ncol=4, frameon=False)
+
     plt.savefig(savePath + '.svg', transparent=True)

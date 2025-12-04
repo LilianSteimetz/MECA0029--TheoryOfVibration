@@ -49,25 +49,79 @@ def calculate_delta_rel(f, N, nmodes):
             delta_rel[m, i] = abs(f[m, i+1] - f[m, i]) / (f[m, i+1] + 1e-15)
     return delta_rel
 
-# --- Global Settings ---
+
+def plotSlidesMulti(x, y, marker='o', xLabel=None, yLabel=None, labels=None, yScaleLog=False, savePath=None, hline=None, vline=None, xlim=None):  # multiple lines to plot
+
+    # renaming
+    labeling = labels
+
+    fig, ax = plt.subplots()  # Note: figsize is now handled by params
+
+    for i in range(len(y)):
+        ax.plot(x, y[i],  marker=marker, label=labeling[i])
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    if xLabel is not None:
+        ax.set_xlabel(xLabel)   # Fontsize is auto-set by params
+    if yLabel is not None:
+        ax.set_ylabel(yLabel)        # Fontsize is auto-set by params
+
+    if yScaleLog is True:
+        ax.set_yscale('log')
+
+    if hline is not None:
+        ax.hlines(hline, xmin=np.min(x), xmax=np.max(
+            x), color='red', linestyles='--')
+    if xlim is not None:
+        ax.set_xlim(0, xlim)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15),
+              ncol=3, frameon=False)
+    ax.set_xticks([1, 2, 3, 4, 5])
+
+    plt.savefig(savePath + '.svg', transparent=True)
+
+
+slide_params = {
+    # Text Sizes (Large for visibility)
+    'font.size': 20,           # General default
+    'axes.labelsize': 28,      # x and y labels
+    'axes.titlesize': 24,      # Title
+    'xtick.labelsize': 20,     # Tick numbers
+    'ytick.labelsize': 20,
+    'legend.fontsize': 18,     # Legend text
+
+    # Line & Marker Geometries (Thick for projectors)
+    'lines.linewidth': 5,    # Thicker data lines
+    'lines.markersize': 15,    # Much larger markers (default was too small)
+    'lines.markeredgewidth': 0,  # Remove marker outline for cleaner look
+
+    # Structural Geometries
+    'axes.linewidth': 2.0,     # Thicker spines (box)
+    'xtick.major.width': 2.0,  # Thicker ticks
+    'ytick.major.width': 2.0,
+    'xtick.major.size': 8.0,   # Longer ticks
+    'ytick.major.size': 8.0,
+
+    # Slide Aesthetics
+    'font.family': 'sans-serif',  # Sans-serif is more legible on slides than serif
+    'figure.autolayout': True,   # Similar to tight_layout
+    'figure.figsize': (12, 9),   # 16:9 Aspect Ratio by default
+}
+
+# Apply the parameters globally
+plt.rcParams.update(slide_params)
 
 
 # Ensure output directory exists
 output_dir = 'pt1_convergence'
 
-# Matplotlib styling
-plt.rcParams.update({
-    "font.family": "DejaVu Serif",
-    "font.serif": ["Arial"],
-    "font.size": 20,
-    "axes.labelsize": 24,
-    "xtick.labelsize": 16,
-    "ytick.labelsize": 16,
-    "legend.fontsize": 10,  # Small legend to fit all 6 modes
-})
 
-Fs = 1.25  # Factor of Safety
 nmodes = 6
+
+"""
+Fs = 1.25  # Factor of Safety
 
 # --- 1. GCI Calculation ---
 
@@ -117,7 +171,7 @@ plt.tight_layout()
 plt.savefig(f'pt1_convergence/GCI_NX.pdf', dpi=300)
 plt.close()
 
-
+"""
 # --- 2. Delta Relatif Calculation ---
 
 N_delta = np.array([1, 2, 3, 4, 5, 10])
@@ -137,7 +191,13 @@ delta_rel_NX = calculate_delta_rel(f_NX_delta, N_delta, nmodes)
 
 # Plot Delta Relatif (One plot for all modes)
 plot_x_delta = N_delta[:-1]
+labels = [f"Mode {i+1}" for i in range(6)]
 
+
+plotSlidesMulti(plot_x_delta, delta_rel_py, labels=labels, xLabel="Number of elements per beam",
+                yLabel=r"$\delta_{rel}^{N \rightarrow N+1}$", yScaleLog=True, savePath="python/presentation/pt1ConvPython")
+
+"""
 # --- Plot 3: Delta Relatif for Python ---
 fig = plt.figure(figsize=(9, 6))
 for m in range(nmodes):
@@ -176,3 +236,5 @@ print(max(delta_rel_py[:, -2]))
 
 print("\nDelta Relatif NX:")
 print(max(delta_rel_NX[:, -2]))
+
+"""

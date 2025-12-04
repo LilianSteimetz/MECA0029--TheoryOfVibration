@@ -106,10 +106,10 @@ print(
 mac_matrix = macMatrix(eigvecs_full, eigvecs_GI)   # choose GI or CB
 
 plotMacMatrix(mac_matrix, title="",
-              show=True, save_path="pt4/MAC_Full_vs_GI.pdf", red='GI')
+              show=True, save_path="presentation/MAC_Full_vs_GI.svg", red='GI')
 
 """Plot mac matrix for CB vs Full model"""
 mac_matrix = macMatrix(eigvecs_full, eigvecs_CB)   # choose GI or CB
 
 plotMacMatrix(mac_matrix, title="",
-              show=True, save_path="pt4/MAC_Full_vs_CB.pdf", red='CB')
+              show=True, save_path="presentation/MAC_Full_vs_CB.svg", red='CB')
